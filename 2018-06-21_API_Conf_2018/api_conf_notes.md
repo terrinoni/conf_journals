@@ -127,6 +127,11 @@ Questo framework consente di sviluppare web API in pochi minuti fornendo un'infr
 Inoltre, l'approccio middleware di Expressive consente di ottenere delle prestazioni elevate utilizzando l'estensione open source Swoole per PHP 7.
 Durante il talk verrà presentato un benchmark effettuato su un'applicazione d'esempio in PHP con tempi di esecuzione 4 volte inferiori rispetto a nginx o Apache.
 
+Swoole per gestire le chiamate asincrone su PHP.
+E' anche possibile gestire la programmazione concorrente "generale" tramite Swoole.
+
+Middleware VS MVC.
+
 Il PHP non è la migliore implementazione per il web.
 PHP -> OOP -> PSR-7 PHP Standards Recommendations, part of PHP Framework Interop Group; sono riusciti a ottenere uno standard su come implementare le chiamate HTTP su PHP.
 Si tratta quindi di una collezione di interfacce che possono essere utilizzate.
@@ -134,9 +139,50 @@ Si tratta quindi di una collezione di interfacce che possono essere utilizzate.
 ## Progettare una UI per i Microservices
 Mauro Servienti `@mauroservienti` - #Microservices
 
-Come possiamo progettare una UI quando il back-end è composto da decine (se non di più) di Microservices? Abbiamo la giusta separazione e autonomia lato back-end, ma tutto alla fine deve tornare insieme lato front-end. Come evitiamo che si trasformi nel solito caos di spaghetti code? Come evitiamo che operazioni semplici si trasformino in un tornado di web request? Durante questa sessione costruiremo un esempio di UI per Microservices, usando .NET Core, in modo da capire a fondo cosa sia la Services UI Composition e come progettare e implementare con successo una UI per i nostri Microservices.
+Come possiamo progettare una UI quando il back-end è composto da decine (se non di più) di Microservices?
+Abbiamo la giusta separazione e autonomia lato back-end, ma tutto alla fine deve tornare insieme lato front-end.
+Come evitiamo che si trasformi nel solito caos di spaghetti code?
+Come evitiamo che operazioni semplici si trasformino in un tornado di web request? Durante questa sessione costruiremo un esempio di UI per Microservices, usando .NET Core, in modo da capire a fondo cosa sia la Services UI Composition e come progettare e implementare con successo una UI per i nostri Microservices.
+
+Domain Model Decomposition: services owning their own piece of information.
+Single Responsibility Principle.
+Applicare SRP ai dati.
+
+ViewModel composition su API Gateway, dove "l'aggregato" delle informazioni da tornare a un client è composto da una serie di informazioni ritornate da tutti i vari servizi, i quali a loro volta hanno "full vertical ownership" su una parte ben specifica delle informazioni.
+Ogni servizio ha ownership su un contesto ben preciso.
+
+* Marketing: front-end component <- web proxy <- Doc DB + HTTP
+* Sales: front-end component <- API <- backend <- DB
+* Shipping: front-end component <- API proxy to third party
+* Warehouse: front-end component <- API <- backend <- DB
+
+Caching: marketing -> 1 mese, sales -> 10 minuti, shipping -> no cache, warehouse -> 24 ore
+
+Il taglio verticale sui servizi ci permette di "specializzare" un servizio in modo tale da ottimizzare la sua gestione delle informazioni trattate.
+Ad esempio se tratto dati collegati tra di loro allora magari per un servizio particolare potrebbe tornare utile un db a grafo; tale servizio sarà quindi verticale su questo tipo di dati e avrà a sua disposizione un DB a grafo, senza starsi troppo a preoccupare con le interazioni con gli altri servizi.
+
+Verticalizzando sui servizi è inoltre possibile avere diverse gestioni di caching su servizi diversi.
+
+[Github repo](https://github.com/mauroservienti/designing-a-ui-for-microservices-demos)
 
 ## Dagli anni '00 agli anni '20: da REST a gRPC
 Gianfranco Reppucci `@giefferre` - #gRPC #JSON-RPC
 
 REST sta per representational state transfer, ed indica un tipo di architettura software proposto e descritto da Roy Fielding nella sua tesi di dottorato presentata nel 2000. Da allora è stata ampiamente adottato, ma sfortunatamente non tutti coloro che hanno implementato API REST hanno letto quella tesi. Come se non bastasse, ci sono casi in cui un’architettura software del genere non soddisfa le esigenze. Vale ancora utilizzare REST? Diamo un’occhiata a soluzioni più moderne di tipo RPC, come JSON-RPC e gRPC.
+
+Prima di REST: CORBA e SOAP.
+
+Roy T. Fielding
+
+Quello che non funziona di REST attualmente sono le specifiche implementazioni; succede ad esempio che l'utilizzo dei vari verbi HTTP non è utilizzato secondo lo standard, come anche l'utilizzo dei codici di errore o risposta (es: perchè c'è 201 created ma non c'è nulla per updated?).
+
+RESTful è legato a HTTP.
+
+JSON - RPC
+
+agnostico al metodo di trasporto
+
+gRPC -> JSON RPC sviluppato da Google.
+Usa Protocol Buffer come interfaccia di definizione del linguaggio (interface definition language).
+
+[Github repositories](https://github.com/giefferre?tab=repositories)
