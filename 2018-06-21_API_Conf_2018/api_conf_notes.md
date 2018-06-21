@@ -131,7 +131,6 @@ Il PHP non è la migliore implementazione per il web.
 PHP -> OOP -> PSR-7 PHP Standards Recommendations, part of PHP Framework Interop Group; sono riusciti a ottenere uno standard su come implementare le chiamate HTTP su PHP.
 Si tratta quindi di una collezione di interfacce che possono essere utilizzate.
 
-
 ## Progettare una UI per i Microservices
 Mauro Servienti `@mauroservienti` - #Microservices
 
